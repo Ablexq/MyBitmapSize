@@ -100,7 +100,7 @@ public static final int DENSITY_DEFAULT = DENSITY_MEDIUM;
 
 以一张大小为 1024*731 = 748544B, 大小为 485.11K 的图片为例，下面是测试手机占用的内存情况。
 
-
+![](https://github.com/Ablexq/MyBitmapSize/blob/master/pics/result.jpg)
 
 从上表可以看出不同屏幕密度的手机加载图片，如果图片放在与自己屏幕密度相同的文件夹下，占用的内存都是 2994176B，
 
