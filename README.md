@@ -5,8 +5,45 @@
 
 [关于Android中图片大小、内存占用与drawable文件夹关系的研究与分析](https://mp.weixin.qq.com/s?__biz=MzA4NDM2MjAwNw==&mid=400540949&idx=1&sn=f2c53f1e5e57cdc11fdc1cb5e333be94&mpshare=1&scene=23&srcid=0817Z5kDLa0lZOj3D009795A#rd)
 
-[]()
+[玩转Android drawable图片适配](https://blog.csdn.net/myoungmeng/article/details/54090891)
 
+[Android drawable微技巧，你所不知道的drawable的那些细节](https://blog.csdn.net/guolin_blog/article/details/50727753)
+
+Android系统适配原则
+===
+
+Android为了更好地优化应用在不同屏幕密度下的用户体验，在项目的res目录下可以创建drawab-[density]（density为6种通用密度名）目录，开发者在进行APP开发时，针对不同的屏幕密度，将图片放置于对应的drawable-[density]目录，Android系统会依据特定的原则来查找各drawable目录下的图片。查找流程为： 
+1. 先查找和屏幕密度最匹配的文件夹。如当前设备屏幕密度dpi为160，则会优先查找drawable-mdpi目录；如果设备屏幕密度dpi为420，则会优先查找drawable-xxhdpi目录。 
+2. 如果在最匹配的目录没有找到对应图片，就会向更高密度的目录查找，直到没有更高密度的目录。例如，在最匹配的目录drawable-mdpi中没有查找到，就会查找drawable-hdpi目录，如果还没有查找到，就会查找drawable-xhdpi目录，直到没有更高密度的drawable-[density]目录。 
+3. 如果一直往高密度目录均没有查找，Android就会查找drawable-nodpi目录。drawable-nodpi目录中的资源适用于所有密度的设备，不管当前屏幕的密度如何，系统都不会缩放此目录中的资源。因此，对于永远不希望系统缩放的资源，最简单的方法就是放在此目录中；同时，放在该目录中的资源最好不要再放到其他drawable目录下了，避免得到非预期的效果。 
+4. 如果在drawable-nodpi目录也没有查找到，系统就会向比最匹配目录密度低的目录依次查找，直到没有更低密度的目录。例如，最匹配目录是xxhdpi，更高密度的目录和nodpi目录查找不到后，就会依次查找drawable-xhdp、drawable-hdpi、drawable-mdpi、drawable-ldpi。
+
+举个例子，假如当前设备的dpi是320，系统会优先去drawable-xhdpi目录查找，如果找不到，会依次查找xxhdpi → xxxhdpi → hdpi → mdpi → ldpi。对于不存在的drawable-[density]目录直接跳过，中间任一目录查找到资源，则停止本次查找。
+
+总结一下图片查找过程：优先匹配最适合的图片→查找密度高的目录（升序）→查找密度低的目录（降序）。
+
+
+比如，设备的dpi为320，这匹配目录为drawable-xhdpi；设备的dpi为150，则匹配目录为drawable-mdpi。图片的放大和缩小遵循以下规律：
+
+如果图片所在目录为匹配目录，则图片会根据设备dpi做适当的缩放调整。
+如果图片所在目录dpi低于匹配目录，那么该图片被认为是为低密度设备需要的，现在要显示在高密度设备上，图片会被放大。
+如果图片所在目录dpi高于匹配目录，那么该图片被认为是为高密度设备需要的，现在要显示在低密度设备上，图片会被缩小。
+如果图片所在目录为drawable-nodpi，则无论设备dpi为多少，保留原图片大小，不进行缩放。
+那么六种通用密度下的缩放倍数是多少呢？以mdpi为基线，各密度目录下的放大倍数（即缩放因子density）如下
+
+密度	   放大倍数
+ldpi	0.75
+mdpi	1.0
+hdpi	1.5
+xhdpi	2.0
+xxhdpi	3.0
+xxxhdpi	4.0
+
+关于切图的选取，Android官方给的建议，各种密度都给出一套图，分别放置在对应的drawable目录下，这种适配是最好的。但也存在问题，一是这种方式会增大安装包的大小；二是很多公司UI在出图时只会出一套。
+
+在这种情况下，怎么使用好这一套切图呢？由于目前的Android智能手机的屏幕基本都在1080p了，屏幕的dpi多数都处于320~480，为了更好地适配，同时为了节省内存成本，建议将切图放置在drawable-xxhdpi目录，同时建议UI针对该密度的设备设计切图。如果UI的切图基于不同尺寸设计，Sketch导出切图时须调整相应的倍数。
+
+例如，假设切图基于376×667的一倍屏幕设计，而要适配1080×1920的屏幕，导出三倍图存放于drawable-xxhdpi目录是适配最好的。
 
 ```
 
@@ -93,8 +130,9 @@ public static final int DENSITY_XXXHIGH = 640;
 public static final int DENSITY_DEFAULT = DENSITY_MEDIUM;
 
 ```
-
-
+同一张正方形图片放在    mdpi  hdpi    xhdpi   xxhdpi
+宽高度会依次变化        3倍   2倍     1.5倍    1倍
+bitmap所占内存依次变化  9倍   4倍     2.25倍   1倍
 
 
 
