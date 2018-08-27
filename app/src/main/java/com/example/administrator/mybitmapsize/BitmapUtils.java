@@ -1,7 +1,9 @@
 package com.example.administrator.mybitmapsize;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -12,7 +14,7 @@ import android.widget.ImageView;
  * Created by Administrator on 18/8/2018.
  */
 
-public class Utils {
+public class BitmapUtils {
 
     public static int getBitmapSize(Bitmap bitmap) {
         if (bitmap == null) {
@@ -58,5 +60,36 @@ public class Utils {
         }
     }
 
+/* ============================================================================================= */
+
+    public static int getFitInSampleSize(int reqWidth, int reqHeight, BitmapFactory.Options options) {
+        int inSampleSize = 1;
+        if (options.outWidth > reqWidth || options.outHeight > reqHeight) {
+            int widthRatio = Math.round((float) options.outWidth / (float) reqWidth);
+            int heightRatio = Math.round((float) options.outHeight / (float) reqHeight);
+            inSampleSize = Math.min(widthRatio, heightRatio);
+        }
+        return inSampleSize;
+    }
+
+    /* 本地图片 */
+    public static Bitmap getFitSampleBitmap(String file_path, int width, int height) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(file_path, options);
+        options.inSampleSize = getFitInSampleSize(width, height, options);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(file_path, options);
+    }
+
+    /* 资源图片 */
+    public static Bitmap getFitSampleBitmap(Resources resources, int resId, int width, int height) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(resources, resId, options);
+        options.inSampleSize = getFitInSampleSize(width, height, options);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(resources, resId, options);
+    }
 
 }

@@ -41,7 +41,7 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_second);
 
         findViews();
-        Utils.getDensity(this);
+        BitmapUtils.getDensity(this);
     }
 
     private void findViews() {
@@ -109,10 +109,10 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.tv_title2:
-                bitmapSize5 = Utils.getBitmapSize(bitmap5);
-                bitmapSize6 = Utils.getBitmapSize(bitmap6);
-                bitmapSize7 = Utils.getBitmapSize(bitmap7);
-                bitmapSize8 = Utils.getBitmapSize(bitmap8);
+                bitmapSize5 = BitmapUtils.getBitmapSize(bitmap5);
+                bitmapSize6 = BitmapUtils.getBitmapSize(bitmap6);
+                bitmapSize7 = BitmapUtils.getBitmapSize(bitmap7);
+                bitmapSize8 = BitmapUtils.getBitmapSize(bitmap8);
                 if (bitmapSize5 != 0) {
                     float i6 = ((float) bitmapSize5) / ((float) bitmapSize6);
                     float i7 = ((float) bitmapSize5) / ((float) bitmapSize7);
@@ -139,10 +139,10 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.tv_title1:
-                bitmapSize1 = Utils.getBitmapSize(bitmap1);
-                bitmapSize2 = Utils.getBitmapSize(bitmap2);
-                bitmapSize3 = Utils.getBitmapSize(bitmap3);
-                bitmapSize4 = Utils.getBitmapSize(bitmap4);
+                bitmapSize1 = BitmapUtils.getBitmapSize(bitmap1);
+                bitmapSize2 = BitmapUtils.getBitmapSize(bitmap2);
+                bitmapSize3 = BitmapUtils.getBitmapSize(bitmap3);
+                bitmapSize4 = BitmapUtils.getBitmapSize(bitmap4);
                 if (bitmapSize1 != 0) {
                     float i2 = ((float) bitmapSize1) / ((float) bitmapSize2);
                     float i3 = ((float) bitmapSize1) / ((float) bitmapSize3);
