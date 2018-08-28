@@ -311,9 +311,9 @@ if (bitmap != null) {
 
 [总结android面试题](https://blog.csdn.net/qq_33078541/article/details/50925842)
 
+[AndroidStudio3.0 Android Profiler分析器(cpu memory network 分析器)](https://blog.csdn.net/niubitianping/article/details/72617864)
 
-
-
+[Android 应用开发性能优化完全分析](http://android.jobbole.com/81746/)
 
 
 
