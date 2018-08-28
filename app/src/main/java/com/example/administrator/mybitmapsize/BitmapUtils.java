@@ -36,6 +36,20 @@ public class BitmapUtils {
         return bitmapSize;
     }
 
+
+    public static long getMaxMemory() {
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
+        long freeMemory = runtime.freeMemory();
+        long totalMemory = runtime.totalMemory();
+        System.out.println("maxMemory======================" + (maxMemory / 1024 / 1024) + " Mb");
+        System.out.println("freeMemory======================" + (freeMemory / 1024 / 1024) + " Mb");
+        System.out.println("totalMemory======================" + (totalMemory / 1024 / 1024) + " Mb");
+        System.out.println("已使用======================" + ((totalMemory - freeMemory) / 1024 / 1024) + " Mb");
+        return maxMemory / 1024 / 1024;
+    }
+
+
     public static void getDensity(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         System.out.println("=====Density is " + displayMetrics.density);

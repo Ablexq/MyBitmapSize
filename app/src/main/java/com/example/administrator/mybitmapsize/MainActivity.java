@@ -1,5 +1,7 @@
 package com.example.administrator.mybitmapsize;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+
+import java.lang.ref.SoftReference;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -19,14 +23,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         this.findViewById(R.id.tv_default).setOnClickListener(this);
         this.findViewById(R.id.tv_good).setOnClickListener(this);
+        this.findViewById(R.id.tv_good2).setOnClickListener(this);
 
         imageView = (ImageView) this.findViewById(R.id.image);
         imageView.setOnClickListener(this);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pic1);
 
+//        for (int i = 0; i < 100; i++) {
+//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pic1);
+//        }
+
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pic1);
         BitmapUtils.getBitmapSize(bitmap);
         BitmapUtils.getDensity(this);
         BitmapUtils.printBitmapSize(imageView);
+
+        BitmapUtils.getMaxMemory();
     }
 
     @Override
@@ -37,16 +49,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.tv_default:
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pic1);
-                System.out.println("111default===================" + BitmapUtils.getBitmapSize(bitmap));
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.flash_bg1);
+                BitmapUtils.getBitmapSize(bitmap);
                 imageView.setImageBitmap(bitmap);
                 break;
 
             case R.id.tv_good:
-                Bitmap fitSampleBitmap = BitmapUtils.getFitSampleBitmap(getResources(), R.drawable.pic1, imageView.getWidth(), imageView.getHeight());
-                System.out.println("111goods===================" + BitmapUtils.getBitmapSize(fitSampleBitmap));
+                Bitmap fitSampleBitmap = BitmapUtils.getFitSampleBitmap(getResources(), R.drawable.flash_bg1, imageView.getWidth(), imageView.getHeight());
+                BitmapUtils.getBitmapSize(fitSampleBitmap);
                 imageView.setImageBitmap(fitSampleBitmap);
+                break;
+
+            case R.id.tv_good2:
+                Bitmap bitmap1 = BitmapDecodeUtil.decodeBitmap(this, R.drawable.flash_bg1);
+                SoftReference<Bitmap> bitmapSoftReference = new SoftReference<>(bitmap1);/*软引用，内存不足就回收*/
+                BitmapUtils.getBitmapSize(bitmapSoftReference.get());
+                imageView.setImageBitmap(bitmapSoftReference.get());
                 break;
         }
     }
 }
+

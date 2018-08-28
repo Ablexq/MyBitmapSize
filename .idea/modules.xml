@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MyBitmapSize.iml" filepath="$PROJECT_DIR$/MyBitmapSize.iml" />
-      <module fileurl="file://E:\Users\lenovo\workspace\MyBitmapSize\MyBitmapSize.iml" filepath="E:\Users\lenovo\workspace\MyBitmapSize\MyBitmapSize.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://E:\Users\lenovo\workspace\MyBitmapSize\app\app.iml" filepath="E:\Users\lenovo\workspace\MyBitmapSize\app\app.iml" />
     </modules>
   </component>
 </project>

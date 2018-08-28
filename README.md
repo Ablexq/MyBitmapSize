@@ -175,3 +175,152 @@ bitmap所占内存依次变化  9倍   4倍     2.25倍   1倍
 
 
 
+华为Nova2
+密度：480dp/xxhdpi/3.0x
+分辨率：1080*1920px（可用：1080*1788）
+屏幕尺寸：2.4*4.3/5.0英寸
+
+华为p8
+ram 2g
+rom 16g
+密度：320dp/xhdpi/2.0x
+分辨率：720*1280px（可用：720*1208）
+屏幕：2.4*4.3/5.0英寸
+
+
+经测试一：
+
+未设置        android:largeHeap="true"
+maxMemory======================192 Mb
+
+设置        android:largeHeap="true"
+maxMemory======================512 Mb
+
+经测试二：
+
+Nova2 加载xxhdpi中图片7m
+p8    加载xxhdpi中图片3m
+
+
+经测试三：华为p8中：
+
+flash_bg1 图片放在xxhdpi：
+图片所占内存：宽px*高px*1像素所占内存
+(1242/1.5)*(2208/1.5)*4/1024=4761kb
+defalut:4761kb
+good:   1190kb
+
+flash_bg1 图片放在xhdpi：
+图片所占内存：宽px*高px*1像素所占内存
+1242*2208*4/1024=10712kb
+defalut:10712kb
+good:   2678kb
+
+
+
+参考
+[安卓1080P界面设计规范解读](https://www.25xt.com/appdesign/9487.html)
+
+[Android进程的内存管理分析](https://blog.csdn.net/gemmem/article/details/8920039?utm_source=tuicool)
+
+[Android内存泄漏分析及调试](https://blog.csdn.net/gemmem/article/details/13017999)
+
+[Android O Bitmap 内存分配](http://www.cnblogs.com/xiaji5572/p/7794083.html)
+
+Bitmap的回收
+=========
+
+1、Android 2.3.3(API 10)及以下的系统
+
+在2.3以下的系统中，Bitmap的像素数据是存储在native中，Bitmap对象是存储在java堆中的，所以在回收Bitmap时，
+
+需要回收两个部分的空间：native和java堆。即先调用recycle()释放native中Bitmap的像素数据，再对Bitmap对象置null，保证GC对Bitmap对象的回收
+
+2、Android 3.0(API 11)及以上的系统
+
+在3.0以上的系统中，Bitmap的像素数据和对象本身都是存储在java堆中的，无需主动调用recycle()，只需将对象置null，由GC自动管理
+
+
+
+密度	建议尺寸
+
+| 布局   | icon尺寸 |
+|----------|-------------|
+|mipmap-mdpi	|   48 x 48|
+|mipmap-hdpi	|   72 x 72|
+|mipmap-xhdpi   |	96 x 96|
+|mipmap-xxhdpi  |	144 x 144|
+|mipmap-xxxhdpi |	192 x 192|
+
+其他
+==
+
+|dpi范围|	密度|	density分辨率|	图片icon尺寸|
+|----------|-------------|-------------|-------------|
+|0dpi ~ 120dpi	|ldpi	|0.75|	240x320 |	36x36
+|120dpi ~ 160dpi|	mdpi(默认)|	1|	320x480	|48x48
+|160dpi ~ 240dpi|	hdpi	|1.5|	480x800	|72x72
+|240dpi ~ 320dpi|	xhdpi	|2	|720x1080	|96x96
+|320dpi ~ 480dpi|	xxhdpi	|3	|1080x1920	|144x144
+|480dpi ~ 640dpi|	xxxhdpi	|4	|1440x2560	|192x192
+
+ppi就是pixel per inch，像素每英寸，用于连续调图像，
+dpi则是dots per inch，一般对应打印机的分辨率。
+即：ppi=dpi
+
+
+iPhone6
+主屏尺寸	4.7英寸
+主屏分辨率	1334x750像素
+屏幕像素密度	326ppi
+屏幕像素密度=（1334*1334+750*750）的开方/4.7=326
+所以iPhone6的尺寸图可放在xhdpi中
+
+
+参考：
+
+[Android性能优化之Bitmap的内存优化](https://www.tuicool.com/articles/3eMNr2n)
+
+
+```
+public static Bitmap readBitMap(Context context, int resId) {
+    BitmapFactory.Options opt = new BitmapFactory.Options();
+    opt.inPreferredConfig = Bitmap.Config.RGB_565;
+    opt.inPurgeable = true;
+    opt.inInputShareable = true;
+    //获取资源图片
+    InputStream is = context.getResources().openRawResource(resId);
+    return BitmapFactory.decodeStream(is, null, opt);
+}
+```
+
+
+```
+SoftReference<Bitmap> bitmap = new SoftReference(pNetBitmap);
+if (bitmap != null) {
+    if (bitmap.get() != null && !bitmap.get().isRecycled()) {
+        bitmap.get().recycle();
+        bitmap = null;
+    }
+}
+```
+
+参考：
+
+[内存溢出（OOM）and内存泄露---及其解决](https://blog.csdn.net/taoolee/article/details/49718585)
+
+[总结android面试题](https://blog.csdn.net/qq_33078541/article/details/50925842)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
