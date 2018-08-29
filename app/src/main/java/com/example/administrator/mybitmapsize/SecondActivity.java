@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.administrator.mybitmapsize.util.BitmapUtils;
+
 
 public class SecondActivity extends AppCompatActivity implements View.OnClickListener {
 

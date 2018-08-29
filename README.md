@@ -317,6 +317,59 @@ if (bitmap != null) {
 
 
 
+Bitmap内存占用大小的计算
+===============
+
+一个BitMap位图占用的内存=图片长度*图片宽度*单位像素占用的字节数。
+
+使用BitmapFactory来decode一张bitmap时，
+
+其单位像素占用的字节数由其参数BitmapFactory.Options的inPreferredConfig变量决定。
+
+(注：drawable目录下有的png图使用Bitmap.Config.RGB_565和ARGB_8888decode出来的大小一样，未解)
+
+ALPHA_8:只有alpha值，没有RGB值，占一个字节。计算：size=w*h
+
+ARGB_4444:一个像素占用2个字节，alpha(A)值，Red（R）值，Green(G)值，Blue（B）值各占4个bites,共16bites，
+这种格式的图片，看起来质量太差，已经不推荐使用。计算：size=wh2
+
+ARGB_8888:一个像素占用4个字节，alpha(A)值，Red（R）值，Green(G)值，Blue（B）值各占8个bites,共32bites,
+即4个字节。这是一种高质量的图片格式，电脑上普通采用的格式。android2.3开始的默认格式。计算：size=wh4
+
+RGB_565:一个像素占用2个字节，没有alpha(A)值，即不支持透明和半透明，
+Red（R）值占5个bites ，Green(G)值占6个bites ，Blue（B）值占5个bites,共16bites,即2个字节。
+对于没有透明和半透明颜色的图片并且不需要颜色鲜艳的来说，该格式的图片能够达到比较的呈现效果，
+相对于ARGB_8888来说也能减少一半的内存开销，因此它是一个不错的选择。计算：size=wh2
+
+
+实际开发中通过代码获取bitmap大小
+```
+     @TargetApi(Build.VERSION_CODES.KITKAT)
+     public static int getBitmapSize(BitmapDrawable value) {
+         Bitmap bitmap = value.getBitmap();
+    if (VersionUtils.hasKitKat()) {
+        return bitmap.getAllocationByteCount();
+    }   if (VersionUtils.hasHoneycombMR1()) {
+        return bitmap.getByteCount();
+    }
+        return bitmap.getRowBytes() * bitmap.getHeight();
+    }
+```
+
+减少Bitmap对象的内存占用：
+
+1. inBitmap:如果设置了这个字段，Bitmap在加载数据时可以复用这个字段所指向的bitmap的内存空间。但是，内存能够复用也是有条件的。在Android4.4（API Level 19）之前，只有新旧两个Bitmap的尺寸一样才能复用内存空间。Android4.4开始只要旧Bitmap的尺寸大于等于新的Bitmap就可以复用了。
+
+2. inSampleSize：缩放比例，在把图片载入内存之前，我们需要先计算出一个合适的缩放比例，避免不必要的大图载入。
+
+3. Decode format：解码格式，选择ARGB_8888 RBG_565 ARGB_444ALPHA_8，存在很大差异。
+
+4. 使用更小的图片：在设计给到资源图片的时候，我们需要特别留意这张图片是否存在可以压缩的空间，是否可以使用一张更小的图片。尽量使用更小的图片不仅仅可以减少内存的使用，还可以避免出现大量的InfaltionException。假设有一张很大的 图片被XML文件直接引用，很有可能在初始化视图的时候就会因为内存不足而发生inflationException，这个问题的根本原因是发生了OOM。
+
+参考：[bitmap的六种压缩方式，Android图片压缩](https://blog.csdn.net/HarryWeasley/article/details/51955467)
+
+[Android面试系列2018总结(全方面覆盖Android知识结构)](https://mp.weixin.qq.com/s?__biz=MzA4NDM2MjAwNw==&mid=2650578278&idx=1&sn=649700edad3b55d5d6fd356c6ab7f4e2&chksm=87e06b1eb097e20865bc39b606f2579b59b4329cb49bf45462e4e4ac97debee929bac6165cd6&mpshare=1&scene=23&srcid=0826G42gZO5RmWuc1aud8FFn#rd)
+
 
 
 

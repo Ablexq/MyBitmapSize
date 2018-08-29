@@ -1,4 +1,4 @@
-package com.example.administrator.mybitmapsize;
+package com.example.administrator.mybitmapsize.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
