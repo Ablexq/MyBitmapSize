@@ -97,7 +97,7 @@ public class BitmapUtils {
     }
 
     /* 资源图片 : 二次采样 （分辨率改变）*/
-    public static Bitmap compressSample(Resources resources, int resId, int width, int height) {
+    public static Bitmap compressSample(Resources resources, int resId, int width, int height) {//宽*高*色彩模式=bitmap大小 ，二次采样宽高均变化则bitmap大小缩小很明显
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(resources, resId, options);
@@ -109,7 +109,7 @@ public class BitmapUtils {
     /* ====================================================================================== */
 
     /* 资源图片 : 色彩模式*/
-    public static Bitmap getFitBitmap(Resources resources, int resId, int width, int height) {
+    public static Bitmap compressColorMode(Resources resources, int resId) {//ARGB_8888切换到RGB_565即宽*高*色彩模式=bitmap大小减少一半
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.RGB_565;
         return BitmapFactory.decodeResource(resources, resId, options);
@@ -117,11 +117,12 @@ public class BitmapUtils {
 
     /* ==================================== 质量压缩 ============================================= */
 
-    //质量压缩法:使图片质量降低（分辨率不变）可以大幅度地减小体积，而且质量的差异肉眼看上去并不明显
+    //质量压缩法:使图片质量降低（分辨率不变）可以大幅度地减小体积，而且质量的差异肉眼看上去并不明显（分辨率不变即宽*高*色彩模式=bitmap大小未变）
     public static Bitmap compressQuality(Bitmap image) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
         int options = 100;
+        System.out.println("t============"+(baos.toByteArray().length / 1024));
         while (baos.toByteArray().length / 1024 > 100) { //循环判断如果压缩后图片是否大于100kb,大于继续压缩
             baos.reset();//重置baos即清空baos
             image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中

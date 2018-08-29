@@ -50,24 +50,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.tv_default:
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.flash_bg1);
-                BitmapUtils.getBitmapSize(bitmap);
-                imageView.setImageBitmap(bitmap);
+                //质量压缩：
+                // png压缩成jpg,透明部分会变黑,
+                // jpg图片压缩，但图片大小=宽px*高px*色彩模式单位像素所占内存,所以未变
+//                Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.pic1);//jpg
+                Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.bg_update);//png
+                BitmapUtils.getBitmapSize(bitmap1);
+                Bitmap bitmap2 = BitmapUtils.compressQuality(bitmap1);
+                BitmapUtils.getBitmapSize(bitmap2);
+                imageView.setImageBitmap(bitmap2);
                 break;
 
             case R.id.tv_good:
-                Bitmap fitSampleBitmap = BitmapUtils.compressSample(getResources(), R.drawable.flash_bg1, imageView.getWidth(), imageView.getHeight());
-                BitmapUtils.getBitmapSize(fitSampleBitmap);
-                imageView.setImageBitmap(fitSampleBitmap);
+                //色彩模式压缩：
+                // PNG格式 有8位、24位、32位三种形式，不能压缩RGB_565（16位），所以压缩无效
+                // jpg格式 由ARGB8888调整为GRB565内存占用减少一半
+//                Bitmap bitmap3 = BitmapUtils.compressColorMode(getResources(), R.drawable.pic1);//jpg
+                Bitmap bitmap3 = BitmapUtils.compressColorMode(getResources(), R.drawable.bg_update);//png
+                Bitmap.Config config2 = bitmap3.getConfig();
+                System.out.println("config2=========" + config2);
+                BitmapUtils.getBitmapSize(bitmap3);
+                imageView.setImageBitmap(bitmap3);
                 break;
 
             case R.id.tv_good2:
-                Bitmap bitmap1 = BitmapDecodeUtil.decodeBitmap(this, R.drawable.flash_bg1);
-                SoftReference<Bitmap> bitmapSoftReference = new SoftReference<>(bitmap1);/*软引用，内存不足就回收*/
-                BitmapUtils.getBitmapSize(bitmapSoftReference.get());
-                imageView.setImageBitmap(bitmapSoftReference.get());
+                //二次采样压缩：尺寸掌握不好，压缩太厉害，可能会变模糊
+//                Bitmap bitmap4 = BitmapUtils.compressSample(getResources(), R.drawable.pic1, 100, 100);//jpg
+                Bitmap bitmap4 = BitmapUtils.compressSample(getResources(), R.drawable.bg_update, 100, 100);//png
+                BitmapUtils.getBitmapSize(bitmap4);
+                imageView.setImageBitmap(bitmap4);
                 break;
         }
     }
 }
-
