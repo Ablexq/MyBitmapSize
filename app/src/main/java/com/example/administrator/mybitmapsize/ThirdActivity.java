@@ -115,14 +115,20 @@ public class ThirdActivity extends AppCompatActivity implements View.OnClickList
 //                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.start_pic_xx);
 //                imageView1.setImageBitmap(bitmap);
 
-                Glide.with(this)
-                        .load(R.drawable.start_pic_xx)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true)
-                        .dontAnimate()
-                        .crossFade()
-//                        .override(((int) dp2px(200)), ((int) dp2px(200)))//相当于压缩图片，从像素（占用内存并未减少，不管20,200还是其他）
-                        .into(imageView1);
+//                Glide.with(this)
+//                        .load(R.drawable.start_pic_xx)
+//                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                        .skipMemoryCache(true)
+//                        .dontAnimate()
+//                        .crossFade()
+////                        .override(((int) dp2px(200)), ((int) dp2px(200)))//相当于压缩图片，从像素（占用内存并未减少，不管20,200还是其他）
+//                        .into(imageView1);
+
+                //压缩图片效果显著
+//                Bitmap bitmap = BitmapUtils.compressSample(getResources(),R.drawable.start_pic_xx, (int)dp2px(20), (int)dp2px(20));
+                Bitmap bitmap = BitmapUtils.compressSample(getResources(),R.drawable.start_pic_xx, imageView1.getWidth(), imageView1.getHeight());
+                imageView1.setImageBitmap(bitmap);
+
             }
             break;
         }

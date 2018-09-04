@@ -398,3 +398,77 @@ PNG格式有8位、24位、32位三种形式，
 32位PNG在24位基础上增加了8位透明通道，因此可展现256级透明程度。
 PNG8和PNG24后面的数字则是代表这种PNG格式最多可以索引和存储的颜色值。
 8代表2的8次方也就是256色，而24则代表2的24次方大概有1600多万色。
+
+
+
+当使用像 imageView.setBackgroundResource，imageView.setImageResource,
+或者 BitmapFactory.decodeResource  这样的方法来设置一张大图片的时候，
+
+这些函数在完成decode后，最终都是通过java层的createBitmap来完成的，需要消耗更多内存。
+
+因此，改用先通过BitmapFactory.decodeStream方法，创建出一个bitmap，
+再将其设为ImageView的 source，
+decodeStream最大的秘密在于其直接调用JNI>>nativeDecodeAsset()来完成decode，
+无需再使用java层的createBitmap，从而节省了java层的空间。
+如果在读取时加上图片的Config参数，可以跟有效减少加载的内存，从而跟有效阻止抛out of Memory异常。
+
+另外，需要特别注意：
+
+decodeStream是直接读取图片资料的字节码了， 不会根据机器的各种分辨率来自动适应，
+
+使用了decodeStream之后，需要在hdpi和mdpi，ldpi中配置相应的图片资源，
+
+否则在不同分辨率机器上都是同样大小（像素点数量），显示出来的大小就不对了。
+
+
+setImageResource/setBackgroundResource/setImageBitmap/直接xml设置src/直接xml设置background：
+
+设置图片所占内存与设置的大小无关，且强制回收回收不掉，xml直接设置比set方法所占内存少
+
+setImageResource:占用内存如下：
+                20dp*20dp 占用55.34MB
+                200dp*200dp 占用55.39MB
+                match_parent 占用56.1MB
+                所以设置图片src占用内存与设置尺寸无关
+
+setBackgroundResource:占用内存如下：
+                20dp*20dp 占用56.33MB
+                200dp*200dp 占用55.37MB
+                match_parent 占用55.36MB
+setImageBitmap:占用内存如下：
+                20dp*20dp 占用55.35MB
+                200dp*200dp 占用55.34MB
+                match_parent 占用55.43MB
+
+直接设置src：
+                20dp*20dp 占用49.91MB
+                200dp*200dp 占用49.95MB
+                match_parent 占用49.89MB
+
+直接设置background：
+                20dp*20dp 占用49.79MB
+                200dp*200dp 占用49.91MB
+                match_parent 占用49.83MB
+
+glide设置图片：
+                20dp*20dp 占用49.89MB
+                200dp*200dp 占用49.98MB
+                match_parent 占用55.88MB
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
