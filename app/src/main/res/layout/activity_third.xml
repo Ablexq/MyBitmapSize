@@ -34,7 +34,7 @@
             android:layout_weight="1"
             android:background="#990000ff"
             android:gravity="center"
-            android:text="加载多张图片" />
+            android:text="src/back/set/glide/压缩等加载图片" />
 
     </LinearLayout>
 

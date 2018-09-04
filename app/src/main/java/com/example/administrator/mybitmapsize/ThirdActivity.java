@@ -3,6 +3,7 @@ package com.example.administrator.mybitmapsize;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -124,10 +125,14 @@ public class ThirdActivity extends AppCompatActivity implements View.OnClickList
 ////                        .override(((int) dp2px(200)), ((int) dp2px(200)))//相当于压缩图片，从像素（占用内存并未减少，不管20,200还是其他）
 //                        .into(imageView1);
 
-                //压缩图片效果显著
-//                Bitmap bitmap = BitmapUtils.compressSample(getResources(),R.drawable.start_pic_xx, (int)dp2px(20), (int)dp2px(20));
-                Bitmap bitmap = BitmapUtils.compressSample(getResources(),R.drawable.start_pic_xx, imageView1.getWidth(), imageView1.getHeight());
-                imageView1.setImageBitmap(bitmap);
+//                //压缩图片效果显著
+////                Bitmap bitmap = BitmapUtils.compressSample(getResources(),R.drawable.start_pic_xx, (int)dp2px(20), (int)dp2px(20));
+//                Bitmap bitmap = BitmapUtils.compressSample(getResources(),R.drawable.start_pic_xx, imageView1.getWidth(), imageView1.getHeight());
+//                imageView1.setImageBitmap(bitmap);//46.91MB
+
+                //在xml中直接设置大图片背景容易OOM采用的加载方式：
+                Bitmap readBitMap = BitmapUtils.readBitMap(this, R.drawable.start_pic_xx);
+                imageView1.setImageBitmap(readBitMap);//52.45MB
 
             }
             break;
@@ -138,4 +143,16 @@ public class ThirdActivity extends AppCompatActivity implements View.OnClickList
         Resources r = Resources.getSystem();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
+
+//    //主动置空
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        System.out.println("========StartActivity onDestroy==========");
+//        Drawable d = imageView.getDrawable();
+//        if (d != null) d.setCallback(null);
+//        imageView.setImageDrawable(null);
+//        imageView.setBackgroundDrawable(null);
+//    }
+
 }

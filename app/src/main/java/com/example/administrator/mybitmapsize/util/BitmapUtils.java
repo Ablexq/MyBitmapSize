@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 
 
 public class BitmapUtils {
@@ -197,6 +198,15 @@ public class BitmapUtils {
         return compressQuality(bitmap);//压缩好比例大小后再进行质量压缩
     }
 
-
+    /* ============================================= */
+    public static Bitmap readBitMap(Context context, int resId) {
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Bitmap.Config.RGB_565;
+        opt.inPurgeable = true;
+        opt.inInputShareable = true;
+        //获取资源图片
+        InputStream is = context.getResources().openRawResource(resId);
+        return BitmapFactory.decodeStream(is, null, opt);
+    }
 
 }
