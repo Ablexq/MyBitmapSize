@@ -27,10 +27,19 @@
             android:gravity="center"
             android:text="加载相同宽高位数，不同filesize" />
 
+        <TextView
+            android:id="@+id/tv3_third"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#990000ff"
+            android:gravity="center"
+            android:text="加载多张图片" />
+
     </LinearLayout>
 
     <ImageView
         android:id="@+id/iv1_third"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
